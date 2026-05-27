@@ -25,6 +25,8 @@ form{
 
 #entrar{
     background-color: #e36e75;
+    width: 130px;
+    height: 40px;
 }
 #clt{
     position: absolute;
@@ -33,4 +35,14 @@ form{
     width: 720px;
     height: 953px;
 
+}
+#cadastrar{
+    background-color: #e36e75;
+}
+
+#butal{
+    background-color: #e36e75;
+    position: relative;
+    left: 20px;
+    top: 0px;
 }

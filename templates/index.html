@@ -12,6 +12,7 @@
     <img src="static/senai.png">
     <img id="clt" src="static/clt.jpeg">
             <form action="/login" method="POST">
+        <div id="bicho">
             <div id="email" class="mb-3">
                 <label>Email</label>
                 <input type="email"
@@ -25,10 +26,16 @@
                     class="form-control">
             </div>
 
-            <button type="submit"
+            <button id="entrar" type="entrar"
                     class="btn btn-primary">
                 Entrar
-            </button>
             </form>
+                    <button id="butal"
+                            formaction="/cadastrar"
+                            type="submit"
+                            class="btn btn-success">
+                        Cadastrar
+                    </button>
+        </div>
 </body>
 </html>

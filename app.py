@@ -3,7 +3,6 @@ import mysql.connector
 
 app = Flask(__name__)
 
-
 conexao = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -14,6 +13,7 @@ conexao = mysql.connector.connect(
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -36,7 +36,31 @@ def login():
     return "Email ou senha incorretos"
 
 @app.route('/dps')
-def pag():
+def cadastro():
     return render_template('dps.html')
+
+@app.route('/cadastrar', methods=['POST'])
+def cadastrar():
+
+    email = request.form['email']
+    senha = request.form['senha']
+
+    cursor = conexao.cursor()
+
+    comando = """
+    INSERT INTO Usuarios(email, senha)
+    VALUES (%s,%s)
+    """
+
+    valores = (email, senha)
+
+    cursor.execute(comando, valores)
+    conexao.commit()
+
+    return redirect('/antesdodps')
+
+@app.route('/antesdodps')
+def pag():
+    return render_template('antesdodps.html')
 
 app.run(debug=True)
