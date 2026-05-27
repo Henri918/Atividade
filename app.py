@@ -9,5 +9,12 @@ def home():
     # Renderiza o template e passa as variáveis
     return render_template('index.html')
 
+@app.route('/dps')
+def pag():
+    # Variáveis que serão enviadas para o template
+    
+    # Renderiza o template e passa as variáveis
+    return render_template('dps.html')
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
