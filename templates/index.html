@@ -11,25 +11,24 @@
 <body id="body1">
     <img src="static/senai.png">
     <img id="clt" src="static/clt.jpeg">
-    <form>
-        <div id="bicho">
+            <form action="/login" method="POST">
             <div id="email" class="mb-3">
-                <label class="form-label">Email address</label>
-                <input type="email" class="form-control">
+                <label>Email</label>
+                <input type="email"
+                    name="email"
+                    class="form-control">
             </div>
             <div id="password" class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" class="form-control">
+                <label>Password</label>
+                <input type="password"
+                    name="senha"
+                    class="form-control">
             </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input">
-                <label class="form-check-label">
-                    Check me out
-                </label>
-            </div>
-            <button onclick="window.open('http://10.154.20.158:5000/dps', '_blank', 'noopener,noreferrer')" id="entrar" type="Entrar" class="btn btn-primary">Entrar</a>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Entrar
             </button>
-        </div>
-    </form>
+            </form>
 </body>
 </html>
