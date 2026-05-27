@@ -5,7 +5,7 @@
 
 
 img{
-    margin:40px;
+    margin:0px;
 }
 
 
@@ -25,4 +25,12 @@ form{
 
 #entrar{
     background-color: #e36e75;
+}
+#clt{
+    position: absolute;
+    top: 0px;
+    left: 1200px;
+    width: 720px;
+    height: 953px;
+
 }
