@@ -1,0 +1,28 @@
+#body1{
+    background-color: #192a6b;
+    margin:0;
+}
+
+
+img{
+    margin:40px;
+}
+
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#bicho{
+    color:white;
+    width:350px;
+    margin-top:100px;
+}
+
+#entrar{
+    background-color: #e36e75;
+}
