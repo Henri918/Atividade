@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina ADM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/style.css"> 
+</head>
+    <body id="tela" class="container mt-4">
+        <h1 style="color: white;">Painel Administrativo</h1>
+        <h3 style="color: white;">Controle de Almoxarifado</h3>
+        <table id="tabela" class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Produto</th>
+            <th>Categoria</th>
+            <th>Quantidade</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for produto in produtos %}
+        <tr>
+            <td>{{produto[0]}}</td>
+            <td>{{produto[1]}}</td>
+            <td>{{produto[2]}}</td>
+            <td>{{produto[3]}}</td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        <a href="/" class="btn btn-danger">
+        Sair
+        </a> 
+
+        <button onclick="mostrarFormulario()"
+    class="btn btn-success">
+
+    Adicionar Item
+
+    </button>
+
+    <div id="formulario" style="display:none;">
+
+        <form action="/cadastrarproduto" method="POST">
+        
+        <input
+        type="text"
+        name="produto"
+        placeholder="Produto">
+        
+        <input
+        type="text"
+        name="categoria"
+        placeholder="Categoria">
+        
+        <input
+        type="number"
+        name="quantidade"
+        placeholder="Quantidade">
+        
+        <button type="submit">
+        
+        Salvar
+        
+        </button>
+        
+        </form>
+        
+        </div>
+
+        <script>
+
+            function mostrarFormulario(){
+            
+                document.getElementById(
+                    "formulario"
+                ).style.display="block"
+            
+            }
+            
+            </script>
+    </body>
+</html>

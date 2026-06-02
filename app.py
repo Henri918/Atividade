@@ -7,7 +7,7 @@ conexao = mysql.connector.connect(
     host="localhost",
     user="root",
     password="",
-    database="login"
+    database="usuarios"
 )
 
 @app.route('/')
@@ -23,15 +23,26 @@ def login():
 
     cursor = conexao.cursor()
 
-    comando = "SELECT * FROM Usuarios WHERE email=%s AND senha=%s"
-    valores = (email, senha)
+    comando = """
+    SELECT *
+    FROM Usuarios
+    WHERE email=%s
+    AND senha=%s
+    """
 
-    cursor.execute(comando, valores)
+    cursor.execute(comando,(email,senha))
 
     usuario = cursor.fetchone()
 
     if usuario:
-        return redirect('/dps')
+
+        tipo = usuario[3]
+
+        if tipo == "admin":
+            return redirect('/adm')
+
+        else:
+            return redirect('/dps')
 
     return "Email ou senha incorretos"
 
@@ -39,7 +50,7 @@ def login():
 def cadastro():
     return render_template('dps.html')
 
-@app.route('/cadastrar', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def cadastrar():
 
     email = request.form['email']
@@ -62,5 +73,47 @@ def cadastrar():
 @app.route('/antesdodps')
 def pag():
     return render_template('antesdodps.html')
+
+@app.route('/adm')
+def adm():
+
+    cursor = conexao.cursor()
+
+    cursor.execute(
+        "SELECT * FROM produtos"
+    )
+
+    produtos = cursor.fetchall()
+
+    return render_template(
+        'adm.html',
+        produtos=produtos
+    )
+@app.route('/cadastrarproduto', methods=['POST'])
+def cadastrarproduto():
+
+    produto = request.form['produto']
+    categoria = request.form['categoria']
+    quantidade = request.form['quantidade']
+
+    cursor = conexao.cursor()
+
+    comando = """
+    INSERT INTO produtos(
+        produto,
+        categoria,
+        quantidade
+    )
+    VALUES(%s,%s,%s)
+    """
+
+    cursor.execute(
+        comando,
+        (produto,categoria,quantidade)
+    )
+
+    conexao.commit()
+
+    return redirect('/adm')
 
 app.run(debug=True)
