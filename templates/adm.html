@@ -20,67 +20,178 @@
         </tr>
         </thead>
         <tbody>
-        {% for produto in produtos %}
-        <tr>
-            <td>{{produto[0]}}</td>
-            <td>{{produto[1]}}</td>
-            <td>{{produto[2]}}</td>
-            <td>{{produto[3]}}</td>
-
-        </tr>
-        {% endfor %}
-        </tbody>
-        </table>
-        <a href="/" class="btn btn-danger">
-        Sair
-        </a> 
-
-        <button onclick="mostrarFormulario()"
-    class="btn btn-success">
-
-    Adicionar Item
-
-    </button>
-
-    <div id="formulario" style="display:none;">
-
-        <form action="/cadastrarproduto" method="POST">
-        
-        <input
-        type="text"
-        name="produto"
-        placeholder="Produto">
-        
-        <input
-        type="text"
-        name="categoria"
-        placeholder="Categoria">
-        
-        <input
-        type="number"
-        name="quantidade"
-        placeholder="Quantidade">
-        
-        <button type="submit">
-        
-        Salvar
-        
-        </button>
-        
-        </form>
-        
-        </div>
-
-        <script>
-
-            function mostrarFormulario(){
-            
+                <table
+                id="tabela"
+                class="table table-striped table-bordered">
+                
+                <thead class="table-dark">
+                
+                <tr>
+                
+                <th>ID</th>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Quantidade</th>
+                <th>Ações</th>
+                
+                </tr>
+                
+                </thead>
+                
+                <tbody>
+                
+                {% for produto in produtos %}
+                
+                <tr>
+                
+                <td>{{produto[0]}}</td>
+                <td>{{produto[1]}}</td>
+                <td>{{produto[2]}}</td>
+                <td>{{produto[3]}}</td>
+                
+                <td>
+                
+                <button
+                class="btn btn-warning"
+                onclick="editarProduto('{{produto[0]}}')">
+                
+                Editar
+                
+                </button>
+                
+                <button
+                class="btn btn-danger"
+                onclick="deletarProduto('{{produto[0]}}')">
+                
+                Excluir
+                
+                </button>
+                
+                </td>
+                
+                </tr>
+                
+                {% endfor %}
+                
+                </tbody>
+                
+                </table>
+                
+                <a href="/"
+                class="btn btn-danger">
+                
+                Sair
+                
+                </a>
+                
+                <button
+                onclick="mostrarFormulario()"
+                class="btn btn-success">
+                
+                Adicionar Item
+                
+                </button>
+                
+                <div
+                id="formulario"
+                style="display:none; margin-top:20px;">
+                
+                <form
+                action="/cadastrarproduto"
+                method="POST">
+                
+                <input
+                type="text"
+                name="produto"
+                placeholder="Produto"
+                required>
+                
+                <input
+                type="text"
+                name="categoria"
+                placeholder="Categoria"
+                required>
+                
+                <input
+                type="number"
+                name="quantidade"
+                placeholder="Quantidade"
+                required>
+                
+                <button
+                type="submit"
+                class="btn btn-primary">
+                
+                Salvar
+                
+                </button>
+                
+                </form>
+                
+                </div>
+                
+                <script>
+                
+                function mostrarFormulario(){
+                
                 document.getElementById(
-                    "formulario"
+                "formulario"
                 ).style.display="block"
-            
-            }
-            
-            </script>
+                
+                }
+                
+                function editarProduto(id){
+                
+                Swal.fire({
+                
+                title:'Nova Quantidade',
+                
+                input:'number',
+                
+                showCancelButton:true,
+                
+                confirmButtonText:'Salvar'
+                
+                }).then((result)=>{
+                
+                if(result.isConfirmed){
+                
+                window.location.href=
+                `/editarquantidade/${id}/${result.value}`
+                
+                }
+                
+                })
+                
+                }
+                
+                function deletarProduto(id){
+                
+                Swal.fire({
+                
+                title:'Excluir item?',
+                
+                icon:'warning',
+                
+                showCancelButton:true,
+                
+                confirmButtonText:'Excluir'
+                
+                }).then((result)=>{
+                
+                if(result.isConfirmed){
+                
+                window.location.href=
+                `/deletar/${id}`
+                
+                }
+                
+                })
+                
+                }
+                
+                </script>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script src="/static/main.js"></script>
     </body>
 </html>

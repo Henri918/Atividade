@@ -7,13 +7,12 @@ conexao = mysql.connector.connect(
     host="localhost",
     user="root",
     password="",
-    database="usuarios"
+    database="login"
 )
 
 @app.route('/')
 def home():
     return render_template('index.html')
-
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -23,14 +22,10 @@ def login():
 
     cursor = conexao.cursor()
 
-    comando = """
-    SELECT *
-    FROM Usuarios
-    WHERE email=%s
-    AND senha=%s
-    """
-
-    cursor.execute(comando,(email,senha))
+    cursor.execute(
+        "SELECT * FROM Usuarios WHERE email=%s AND senha=%s",
+        (email,senha)
+    )
 
     usuario = cursor.fetchone()
 
@@ -41,38 +36,33 @@ def login():
         if tipo == "admin":
             return redirect('/adm')
 
-        else:
-            return redirect('/dps')
+        return redirect('/dps')
 
     return "Email ou senha incorretos"
 
-@app.route('/dps')
-def cadastro():
-    return render_template('dps.html')
+@app.route('/cadastrarproduto', methods=['POST'])
+def cadastrarproduto():
 
-@app.route('/login', methods=['POST'])
-def cadastrar():
+    produto = request.form['produto']
+    categoria = request.form['categoria']
+    quantidade = request.form['quantidade']
 
-    email = request.form['email']
-    senha = request.form['senha']
+    print(produto,categoria,quantidade)
 
     cursor = conexao.cursor()
 
-    comando = """
-    INSERT INTO Usuarios(email, senha)
-    VALUES (%s,%s)
-    """
+    cursor.execute(
+        """
+        INSERT INTO produtos
+        (produto,categoria,quantidade)
+        VALUES (%s,%s,%s)
+        """,
+        (produto,categoria,quantidade)
+    )
 
-    valores = (email, senha)
-
-    cursor.execute(comando, valores)
     conexao.commit()
 
-    return redirect('/antesdodps')
-
-@app.route('/antesdodps')
-def pag():
-    return render_template('antesdodps.html')
+    return redirect('/adm')
 
 @app.route('/adm')
 def adm():
@@ -89,31 +79,89 @@ def adm():
         'adm.html',
         produtos=produtos
     )
-@app.route('/cadastrarproduto', methods=['POST'])
-def cadastrarproduto():
-
-    produto = request.form['produto']
-    categoria = request.form['categoria']
-    quantidade = request.form['quantidade']
+@app.route('/retirar/<int:id>/<int:qtd>')
+def retirar(id,qtd):
 
     cursor = conexao.cursor()
 
-    comando = """
-    INSERT INTO produtos(
-        produto,
-        categoria,
-        quantidade
+    cursor.execute(
+        "SELECT quantidade FROM produtos WHERE id=%s",
+        (id,)
     )
-    VALUES(%s,%s,%s)
-    """
+
+    resultado = cursor.fetchone()
+
+    print("ID recebido:", id)
+    print("Resultado:", resultado)
+
+    if resultado is None:
+        return "Produto não encontrado"
+
+    atual = resultado[0]
+
+    nova = atual - qtd
 
     cursor.execute(
-        comando,
-        (produto,categoria,quantidade)
+        """
+        UPDATE produtos
+        SET quantidade=%s
+        WHERE id=%s
+        """,
+        (nova,id)
+    )
+
+    conexao.commit()
+
+    return redirect('/dps')
+
+@app.route('/dps')
+def dps():
+
+    cursor = conexao.cursor()
+
+    cursor.execute(
+        "SELECT * FROM produtos"
+    )
+
+    produtos = cursor.fetchall()
+
+    return render_template(
+        'dps.html',
+        produtos=produtos
+    )
+
+@app.route('/editarquantidade/<int:id>/<int:qtd>')
+def editarquantidade(id,qtd):
+
+    cursor = conexao.cursor() 
+
+    cursor.execute(
+        """
+        UPDATE produtos
+        SET quantidade=%s
+        WHERE id=%s
+        """,
+        (qtd,id)
     )
 
     conexao.commit()
 
     return redirect('/adm')
 
+@app.route('/deletar/<int:id>')
+def deletar(id):
+
+    cursor = conexao.cursor()
+
+    cursor.execute(
+        """
+        DELETE FROM produtos
+        WHERE id=%s
+        """,
+        (id,)
+    )
+
+    conexao.commit()
+
+    return redirect('/adm')
 app.run(debug=True)
