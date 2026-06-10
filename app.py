@@ -64,6 +64,26 @@ def cadastrarproduto():
 
     return redirect('/adm')
 
+@app.route('/cadastrar', methods=['POST'])
+def cadastrar():
+
+        email = request.form['email']
+        senha = request.form['senha']
+
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            """
+            INSERT INTO Usuarios(email, senha, tipo)
+            VALUES (%s, %s, %s)
+            """,
+            (email, senha, 'usuario')
+        )
+
+        conexao.commit()
+
+        return redirect('/dps.html')
+
 @app.route('/adm')
 def adm():
 
@@ -164,4 +184,5 @@ def deletar(id):
     conexao.commit()
 
     return redirect('/adm')
+
 app.run(debug=True)
