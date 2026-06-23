@@ -23,11 +23,15 @@ def login():
     cursor = conexao.cursor()
 
     cursor.execute(
-        "SELECT * FROM Usuarios WHERE email=%s AND senha=%s",
+        "SELECT * FROM usuario WHERE email=%s AND senha=%s",
         (email,senha)
     )
 
     usuario = cursor.fetchone()
+
+    print("Email:", email)
+    print("Senha:", senha)
+    print("Usuario encontrado:", usuario)
 
     if usuario:
 
@@ -74,7 +78,7 @@ def cadastrar():
 
         cursor.execute(
             """
-            INSERT INTO Usuarios(email, senha, tipo)
+            INSERT INTO usuario (email, senha, tipo)
             VALUES (%s, %s, %s)
             """,
             (email, senha, 'usuario')
@@ -82,7 +86,7 @@ def cadastrar():
 
         conexao.commit()
 
-        return redirect('/dps.html')
+        return redirect('/dps')
 
 @app.route('/adm')
 def adm():

@@ -11,7 +11,7 @@
 <body id="body1">
     <img src="static/senai.png">
     <img id="clt" src="static/clt.jpeg">
-            <form action="/login" method="POST">
+            <form action="/login" method="post">
         <div id="bicho">
             <div id="email" class="mb-3">
                 <label>Email</label>
@@ -29,15 +29,17 @@
             <button id="entrar" type="entrar"
                     class="btn btn-primary">
                 Entrar
-            </form>
-                    <button
+            </button>
+        </div>
+        <div>
+            <form action="/cadastrar" method="post">
+                <button
                     id="butal"
-                    formaction="/dps"
-                    formmethod="POST"
                     type="submit"
                     class="btn btn-success">
                     Cadastrar
                 </button>
+            </form>
         </div>
 
 </body>
