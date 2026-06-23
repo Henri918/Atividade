@@ -47,21 +47,19 @@ def login():
 @app.route('/cadastrarproduto', methods=['POST'])
 def cadastrarproduto():
 
-    produto = request.form['produto']
+    nome = request.form['nome']
     categoria = request.form['categoria']
     quantidade = request.form['quantidade']
-
-    print(produto,categoria,quantidade)
 
     cursor = conexao.cursor()
 
     cursor.execute(
         """
         INSERT INTO produtos
-        (produto,categoria,quantidade)
-        VALUES (%s,%s,%s)
+        (nome,categoria,quantidade_estoque,estoque_minimo,preco)
+        VALUES (%s,%s,%s,%s,%s)
         """,
-        (produto,categoria,quantidade)
+        (nome,categoria,quantidade_estoque,0,0)
     )
 
     conexao.commit()

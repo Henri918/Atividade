@@ -44,8 +44,23 @@ form{
     background-color: #e36e75;
     position: relative;
     left: 50px;
-    top: 0px;
+    top: -38px;
 }
 #tela{
     background-color: #192a6b;
+}
+
+#botao{
+    background-color: #e36e75;
+    position: relative;
+    left: -50px;
+    top: 0px;
+}
+
+#email{
+    color: #fff;;
+}
+
+#senha{
+    color: #fff;;
 }

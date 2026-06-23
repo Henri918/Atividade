@@ -8,39 +8,33 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="static/style.css">
 </head>
-<body id="body1">
-    <img src="static/senai.png">
-    <img id="clt" src="static/clt.jpeg">
-            <form action="/login" method="post">
-        <div id="bicho">
+        <body id="body1">
+            <img src="static/senai.png">
+            <img id="clt" src="static/clt.jpeg">
+                    <form method="post">
+
             <div id="email" class="mb-3">
                 <label>Email</label>
-                <input type="email"
-                    name="email"
-                    class="form-control">
-            </div>
-            <div id="password" class="mb-3">
-                <label>Password</label>
-                <input type="password"
-                    name="senha"
-                    class="form-control">
+                <input type="email" name="email" class="form-control">
             </div>
 
-            <button id="entrar" type="entrar"
+            <div id="senha" class="mb-3">
+                <label>Senha</label>
+                <input type="password" name="senha" class="form-control">
+            </div>
+
+            <button id="botao" formaction="/login"
+                    type="submit"
                     class="btn btn-primary">
                 Entrar
             </button>
-        </div>
-        <div>
-            <form action="/cadastrar" method="post">
-                <button
-                    id="butal"
+
+            <button id="butal" formaction="/cadastrar"
                     type="submit"
                     class="btn btn-success">
-                    Cadastrar
-                </button>
-            </form>
-        </div>
+                Cadastrar
+            </button>
 
+</form>
 </body>
 </html>
