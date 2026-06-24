@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 import mysql.connector
 
 app = Flask(__name__)
+
+app.secret_key = "senai2026"
 
 conexao = mysql.connector.connect(
     host="localhost",
@@ -24,25 +26,23 @@ def login():
 
     cursor.execute(
         "SELECT * FROM usuario WHERE email=%s AND senha=%s",
-        (email,senha)
+        (email, senha)
     )
 
     usuario = cursor.fetchone()
 
-    print("Email:", email)
-    print("Senha:", senha)
-    print("Usuario encontrado:", usuario)
+    if usuario is None:
+        return "Email ou senha incorretos"
 
-    if usuario:
+        session['email'] = usuario[1]
+        session['tipo'] = usuario[3]
 
-        tipo = usuario[3]
+    tipo = usuario[3]
 
-        if tipo == "admin":
-            return redirect('/adm')
+    if tipo == 'admin':
+        return redirect('/adm')
 
-        return redirect('/dps')
-
-    return "Email ou senha incorretos"
+    return redirect('/dps')
 
 @app.route('/cadastrarproduto', methods=['POST'])
 def cadastrarproduto():
@@ -88,7 +88,11 @@ def cadastrar():
 
 @app.route('/adm')
 def adm():
+    if 'tipo' not in session:
+    return redirect('/')
 
+    if session['tipo'] != 'admin':
+    return redirect('/dps')
     cursor = conexao.cursor()
 
     cursor.execute(
@@ -186,5 +190,12 @@ def deletar(id):
     conexao.commit()
 
     return redirect('/adm')
+
+@app.route('/logout')
+def logout():
+
+    session.clear()
+
+    return redirect('/')
 
 app.run(debug=True)
