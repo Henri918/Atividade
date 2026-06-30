@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, session
 import mysql.connector
 
 app = Flask(__name__)
-
 app.secret_key = "senai2026"
 
 conexao = mysql.connector.connect(
@@ -34,8 +33,8 @@ def login():
     if usuario is None:
         return "Email ou senha incorretos"
 
-        session['email'] = usuario[1]
-        session['tipo'] = usuario[3]
+    session['email'] = usuario[1]
+    session['tipo'] = usuario[3]
 
     tipo = usuario[3]
 
@@ -49,18 +48,16 @@ def cadastrarproduto():
 
     nome = request.form['nome']
     categoria = request.form['categoria']
-    quantidade = request.form['quantidade']
+    quantidade = request.form['quantidade_estoque']
+    foto2 = request.form['foto2']
 
     cursor = conexao.cursor()
 
-    cursor.execute(
-        """
+    cursor.execute("""
         INSERT INTO produtos
-        (nome,categoria,quantidade_estoque,estoque_minimo,preco)
-        VALUES (%s,%s,%s,%s,%s)
-        """,
-        (nome,categoria,quantidade_estoque,0,0)
-    )
+        (nome, categoria, quantidade_estoque, estoque_minimo, preco, foto2)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (nome, categoria, quantidade, 0, 0, foto2))
 
     conexao.commit()
 
@@ -89,10 +86,11 @@ def cadastrar():
 @app.route('/adm')
 def adm():
     if 'tipo' not in session:
-    return redirect('/')
+        return redirect('/')
 
     if session['tipo'] != 'admin':
-    return redirect('/dps')
+        return redirect('/dps')
+
     cursor = conexao.cursor()
 
     cursor.execute(
@@ -111,7 +109,7 @@ def retirar(id,qtd):
     cursor = conexao.cursor()
 
     cursor.execute(
-        "SELECT quantidade FROM produtos WHERE id=%s",
+        "SELECT quantidade_estoque FROM produtos WHERE id=%s",
         (id,)
     )
 
@@ -130,7 +128,7 @@ def retirar(id,qtd):
     cursor.execute(
         """
         UPDATE produtos
-        SET quantidade=%s
+        SET quantidade_estoque=%s
         WHERE id=%s
         """,
         (nova,id)
@@ -145,11 +143,11 @@ def dps():
 
     cursor = conexao.cursor()
 
-    cursor.execute(
-        "SELECT * FROM produtos"
-    )
+    cursor.execute("SELECT * FROM produtos")
 
     produtos = cursor.fetchall()
+
+    print(produtos)   
 
     return render_template(
         'dps.html',
@@ -197,5 +195,6 @@ def logout():
     session.clear()
 
     return redirect('/')
+
 
 app.run(debug=True)

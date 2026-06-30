@@ -1,7 +1,6 @@
 CREATE DATABASE login;
 USE login;
 
--- Tabela de usuários
 CREATE TABLE usuario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -9,7 +8,6 @@ CREATE TABLE usuario (
     tipo VARCHAR(20) NOT NULL
 );
 
--- Tabela de produtos
 CREATE TABLE produtos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,

@@ -67,6 +67,14 @@
                 
                 </button>
                 
+                <button
+                class="btn btn-info"
+                data-foto="{{ produto[7] }}"
+                onclick="verImagem(this.dataset.foto)">
+
+                Ver imagem
+
+                </button>
                 </td>
                 
                 </tr>
@@ -117,6 +125,14 @@
                 name="quantidade_estoque"
                 placeholder="Quantidade"
                 required>
+
+
+                <input
+                type="text"
+                name="foto2"
+                placeholder="Link da imagem"
+                required>
+
                 
                 <button
                 type="submit"
@@ -125,6 +141,7 @@
                 Salvar
                 
                 </button>
+                
                 
                 </form>
                 
