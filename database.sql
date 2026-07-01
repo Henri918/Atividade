@@ -16,7 +16,8 @@ CREATE TABLE produtos (
     quantidade_estoque INT DEFAULT 0,
     estoque_minimo INT DEFAULT 0,
     preco DECIMAL(10,2) DEFAULT 0,
-    foto VARCHAR(255)
+    foto2 VARCHAR(255),
+	data_hora DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 INSERT INTO usuario (email, senha, tipo)
 VALUES
@@ -25,3 +26,4 @@ VALUES
 INSERT INTO usuario (email, senha, tipo)
 VALUES
 ('user@gmail.com', '123', 'usuario');
+

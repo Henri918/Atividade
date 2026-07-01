@@ -196,5 +196,43 @@ def logout():
 
     return redirect('/')
 
+@app.route('/usuarios')
+def usuarios():
 
+    if 'tipo' not in session:
+        return redirect('/')
+
+    if session['tipo'] != 'admin':
+        return redirect('/dps')
+
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT * FROM usuario")
+
+    usuarios = cursor.fetchall()
+
+    return render_template(
+        'usuarios.html',
+        usuarios=usuarios
+    )
+
+@app.route('/movimentacos')
+def movimentacos():
+
+    if 'tipo' not in session:
+        return redirect('/')
+
+    if session['tipo'] != 'admin':
+        return redirect('/dps')
+
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT * FROM usuario")
+
+    moveimentacos = cursor.fetchall()
+
+    return render_template(
+        'movimentacos.html',
+        movimentacos=movimentacos
+    )
 app.run(debug=True)
