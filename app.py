@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 import mysql.connector
+import bcrypt
 
 app = Flask(__name__)
 app.secret_key = "senai2026"
@@ -24,14 +25,30 @@ def login():
     cursor = conexao.cursor()
 
     cursor.execute(
-        "SELECT * FROM usuario WHERE email=%s AND senha=%s",
-        (email, senha)
+        """
+        SELECT *
+        FROM usuario
+        WHERE email=%s
+        """,
+        (email,)
     )
 
     usuario = cursor.fetchone()
 
     if usuario is None:
         return "Email ou senha incorretos"
+
+    senha_hash = usuario[2]
+
+    if not bcrypt.checkpw(
+        senha.encode('utf-8'),
+        senha_hash.encode('utf-8')
+    ):
+        return "Email ou senha incorretos"
+        usuario = cursor.fetchone()
+
+        if usuario is None:
+            return "Email ou senha incorretos"
 
     session['email'] = usuario[1]
     session['tipo'] = usuario[3]
@@ -59,6 +76,21 @@ def cadastrarproduto():
         VALUES (%s, %s, %s, %s, %s, %s)
     """, (nome, categoria, quantidade, 0, 0, foto2))
 
+    cursor.execute(
+    """
+    INSERT INTO movimentacoes
+    (produto_id, produto, tipo, quantidade, usuario)
+    VALUES (%s,%s,%s,%s,%s)
+    """,
+    (
+        cursor.lastrowid,
+        nome,
+        "Entrada",
+        quantidade,
+        session['email']
+    )
+    )
+
     conexao.commit()
 
     return redirect('/adm')
@@ -69,14 +101,19 @@ def cadastrar():
         email = request.form['email']
         senha = request.form['senha']
 
+        senha_hash = bcrypt.hashpw(
+            senha.encode('utf-8'),
+            bcrypt.gensalt()
+        ).decode('utf-8')
+
         cursor = conexao.cursor()
 
         cursor.execute(
             """
-            INSERT INTO usuario (email, senha, tipo)
-            VALUES (%s, %s, %s)
+            INSERT INTO usuario(email, senha, tipo)
+            VALUES (%s,%s,%s)
             """,
-            (email, senha, 'usuario')
+            (email, senha_hash, tipo)
         )
 
         conexao.commit()
@@ -104,37 +141,63 @@ def adm():
         produtos=produtos
     )
 @app.route('/retirar/<int:id>/<int:qtd>')
-def retirar(id,qtd):
+def retirar(id, qtd):
+
+    if 'email' not in session:
+        return redirect('/')
 
     cursor = conexao.cursor()
 
+ 
     cursor.execute(
-        "SELECT quantidade_estoque FROM produtos WHERE id=%s",
-        (id,)
+    """
+    SELECT nome, quantidade
+    FROM produtos
+    WHERE id=%s
+    """,
+    (id,)
     )
-
     resultado = cursor.fetchone()
 
-    print("ID recebido:", id)
-    print("Resultado:", resultado)
-
     if resultado is None:
+        cursor.close()
         return "Produto não encontrado"
 
-    atual = resultado[0]
+    produto_nome = resultado[0]
+    quantidade_atual = resultado[1]
 
-    nova = atual - qtd
+
+    if qtd > quantidade_atual:
+        cursor.close()
+        return "Quantidade indisponível no estoque"
+
+    nova_quantidade = quantidade_atual - qtd
 
     cursor.execute(
+    """
+    UPDATE produtos
+    SET quantidade=%s
+    WHERE id=%s
+    """,
+    (nova_quantidade, id)
+    )
+    cursor.execute(
         """
-        UPDATE produtos
-        SET quantidade_estoque=%s
-        WHERE id=%s
+        INSERT INTO movimentacoes
+        (produto_id, produto, tipo, quantidade, usuario)
+        VALUES (%s, %s, %s, %s, %s)
         """,
-        (nova,id)
+        (
+            id,
+            produto_nome,
+            "Retirada",
+            qtd,
+            session['email']
+        )
     )
 
     conexao.commit()
+    cursor.close()
 
     return redirect('/dps')
 
@@ -168,6 +231,28 @@ def editarquantidade(id,qtd):
         (qtd,id)
     )
 
+    cursor.execute(
+    "SELECT nome FROM produtos WHERE id=%s",
+    (id,)
+)
+
+    produto = cursor.fetchone()[0]
+
+    cursor.execute(
+        """
+        INSERT INTO movimentacoes
+        (produto_id, produto, tipo, quantidade, usuario)
+        VALUES (%s,%s,%s,%s,%s)
+        """,
+        (
+            id,
+            produto,
+            "Edição",
+            qtd,
+            session['email']
+        )
+    )
+
     conexao.commit()
 
     return redirect('/adm')
@@ -196,6 +281,28 @@ def logout():
 
     return redirect('/')
 
+
+@app.route('/movimentacos')
+def movimentacos():
+
+    if 'tipo' not in session:
+        return redirect('/')
+
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM movimentacoes
+        ORDER BY data_hora DESC
+    """)
+
+    movimentacoes = cursor.fetchall()
+
+    return render_template(
+        "movimentacos.html",
+        movimentacoes=movimentacoes
+    )
+
 @app.route('/usuarios')
 def usuarios():
 
@@ -207,32 +314,41 @@ def usuarios():
 
     cursor = conexao.cursor()
 
-    cursor.execute("SELECT * FROM usuario")
+    cursor.execute("""
+        SELECT id,email,tipo
+        FROM usuario
+    """)
 
     usuarios = cursor.fetchall()
 
     return render_template(
-        'usuarios.html',
+        "usuarios.html",
         usuarios=usuarios
     )
 
-@app.route('/movimentacos')
-def movimentacos():
+@app.route('/cadastrarusuario', methods=['POST'])
+def cadastrarusuario():
 
-    if 'tipo' not in session:
-        return redirect('/')
-
-    if session['tipo'] != 'admin':
-        return redirect('/dps')
+    email = request.form['email']
+    senha = request.form['senha']
+    senha_hash = bcrypt.hashpw(
+        senha.encode('utf-8'),
+        bcrypt.gensalt()
+    ).decode('utf-8')
+    tipo = request.form['tipo']
 
     cursor = conexao.cursor()
 
-    cursor.execute("SELECT * FROM usuario")
-
-    moveimentacos = cursor.fetchall()
-
-    return render_template(
-        'movimentacos.html',
-        movimentacos=movimentacos
+    cursor.execute(
+        """
+        INSERT INTO usuario(email, senha, tipo)
+        VALUES (%s,%s,%s)
+        """,
+        (email, senha_hash, tipo)
     )
+
+    conexao.commit()
+
+    return redirect('/usuarios')
+
 app.run(debug=True)

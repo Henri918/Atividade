@@ -19,6 +19,17 @@ CREATE TABLE produtos (
     foto2 VARCHAR(255),
 	data_hora DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE movimentacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    produto_id INT NOT NULL,
+    produto VARCHAR(100) NOT NULL,
+    tipo VARCHAR(20) NOT NULL,
+    quantidade INT NOT NULL,
+    usuario VARCHAR(100) NOT NULL,
+    data_hora DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT INTO usuario (email, senha, tipo)
 VALUES
 ('admin@gmail.com', '123', 'admin');
