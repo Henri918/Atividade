@@ -26,8 +26,7 @@ def login():
 
     cursor.execute(
         """
-        SELECT *
-        FROM usuario
+        SELECT * FROM usuario
         WHERE email=%s
         """,
         (email,)
@@ -45,17 +44,11 @@ def login():
         senha_hash.encode('utf-8')
     ):
         return "Email ou senha incorretos"
-        usuario = cursor.fetchone()
-
-        if usuario is None:
-            return "Email ou senha incorretos"
 
     session['email'] = usuario[1]
     session['tipo'] = usuario[3]
 
-    tipo = usuario[3]
-
-    if tipo == 'admin':
+    if usuario[3] == "admin":
         return redirect('/adm')
 
     return redirect('/dps')
@@ -65,14 +58,14 @@ def cadastrarproduto():
 
     nome = request.form['nome']
     categoria = request.form['categoria']
-    quantidade = request.form['quantidade_estoque']
+    quantidade = request.form['quantidade']
     foto2 = request.form['foto2']
 
     cursor = conexao.cursor()
 
     cursor.execute("""
         INSERT INTO produtos
-        (nome, categoria, quantidade_estoque, estoque_minimo, preco, foto2)
+        (nome, categoria, quantidade, estoque_minimo, preco, foto2)
         VALUES (%s, %s, %s, %s, %s, %s)
     """, (nome, categoria, quantidade, 0, 0, foto2))
 
@@ -98,27 +91,27 @@ def cadastrarproduto():
 @app.route('/cadastrar', methods=['POST'])
 def cadastrar():
 
-        email = request.form['email']
-        senha = request.form['senha']
+    email = request.form['email']
+    senha = request.form['senha']
 
-        senha_hash = bcrypt.hashpw(
-            senha.encode('utf-8'),
-            bcrypt.gensalt()
-        ).decode('utf-8')
+    senha_hash = bcrypt.hashpw(
+        senha.encode('utf-8'),
+        bcrypt.gensalt()
+    ).decode('utf-8')
 
-        cursor = conexao.cursor()
+    cursor = conexao.cursor()
 
-        cursor.execute(
-            """
-            INSERT INTO usuario(email, senha, tipo)
-            VALUES (%s,%s,%s)
-            """,
-            (email, senha_hash, tipo)
-        )
+    cursor.execute(
+        """
+        INSERT INTO usuario(email, senha, tipo)
+        VALUES (%s,%s,%s)
+        """,
+        (email, senha_hash, "usuario")
+    )
 
-        conexao.commit()
+    conexao.commit()
 
-        return redirect('/dps')
+    return redirect('/')
 
 @app.route('/adm')
 def adm():
