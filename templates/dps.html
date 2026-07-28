@@ -7,9 +7,10 @@
           rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="static/style.css"> 
 </head>
 
-<body id="cu" class="container mt-4">
+<body id="giga" class="container mt-4">
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
@@ -19,13 +20,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link active" aria-current="page" href="">Home</a>
                 </div>
             </div>
             </div>
         </nav>
 
-<h1>Estoque</h1>
+<h1 style="color: white;">Estoque</h1>
 
 <table class="table table-dark">
 
@@ -53,7 +54,7 @@
             <button
                 class="btn btn-primary"
                 onclick="abrirPopup('{{ produto[0] }}','{{ produto[3] }}')">
-
+                
                 Retirar
 
             </button>
@@ -70,14 +71,6 @@
 
             </button>
 
-        </td>
-
-        <a href="/"
-        class="btn btn-danger">
-        
-        Sair
-        
-        </a>
         
 
     </tr>
@@ -86,7 +79,15 @@
 
     </tbody>
 
+
 </table>
+
+    <a href="/"
+            class="btn btn-danger">
+                        
+            Sair
+                        
+            </a>
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 
