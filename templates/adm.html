@@ -164,67 +164,6 @@
                 
                 </div>
                 
-                <script>
-                
-                function mostrarFormulario(){
-                
-                document.getElementById(
-                "formulario"
-                ).style.display="block"
-                
-                }
-                
-                function editarProduto(id){
-                
-                Swal.fire({
-                
-                title:'Nova Quantidade',
-                
-                input:'number',
-                
-                showCancelButton:true,
-                
-                confirmButtonText:'Salvar'
-                
-                }).then((result)=>{
-                
-                if(result.isConfirmed){
-                
-                window.location.href=
-                `/editarquantidade/${id}/${result.value}`
-                
-                }
-                
-                })
-                
-                }
-                
-                function deletarProduto(id){
-                
-                Swal.fire({
-                
-                title:'Excluir item?',
-                
-                icon:'warning',
-                
-                showCancelButton:true,
-                
-                confirmButtonText:'Excluir'
-                
-                }).then((result)=>{
-                
-                if(result.isConfirmed){
-                
-                window.location.href=
-                `/deletar/${id}`
-                
-                }
-                
-                })
-                
-                }
-                
-                </script>
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                 <script src="/static/main.js"></script>
     </body>
