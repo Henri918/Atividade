@@ -14,7 +14,7 @@
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
+            <a class="navbar-brand" href=""></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -37,6 +37,7 @@
             <th>Quantidade</th>
             <th>Ação</th>
             <th>Imagem</th>
+            <th>Adicionar</th>
         </tr>
     </thead>
 
@@ -49,6 +50,7 @@
         <td>{{ produto[1] }}</td>
         <td>{{ produto[2] }}</td>
         <td>{{ produto[3] }}</td>
+
 
         <td>
             <button
@@ -71,8 +73,16 @@
 
             </button>
 
-        
+        </td>
 
+        <td>
+            <button
+                class="btn btn-warning"
+                onclick="adicionarProduto('{{ produto[0] }}')">
+
+                Adicionar
+            </button>
+        </td>
     </tr>
 
     {% endfor %}

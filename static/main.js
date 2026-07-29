@@ -132,3 +132,29 @@ window.location.href=`/retirar/${id}/${qtd}`;
 });
 
 }
+
+function adicionarProduto(id) {
+
+    console.log("ADICIONAR", id);
+
+    Swal.fire({
+        title: 'Adicionar Quantidade',
+        input: 'number',
+        inputAttributes: {
+            min: 1
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Adicionar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+
+        if (result.isConfirmed && result.value) {
+
+            window.location.href =
+            `/adicionarquantidade/${id}/${result.value}`;
+
+        }
+
+    });
+
+}

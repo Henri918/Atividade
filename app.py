@@ -194,6 +194,22 @@ def retirar(id, qtd):
 
     return redirect('/dps')
 
+@app.route("/adicionarquantidade/<int:id>/<int:quantidade>")
+def adicionarQuantidade(id, quantidade):
+
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        UPDATE produtos
+        SET quantidade = quantidade + %s
+        WHERE id = %s
+    """, (quantidade, id))
+
+    conexao.commit()
+    cursor.close()
+
+    return redirect("/dps")
+
 @app.route('/dps')
 def dps():
 
@@ -249,6 +265,7 @@ def editarquantidade(id,qtd):
     conexao.commit()
 
     return redirect('/adm')
+
 
 @app.route('/deletar/<int:id>')
 def deletar(id):
@@ -344,4 +361,4 @@ def cadastrarusuario():
 
     return redirect('/usuarios')
 
-app.run(debug=True)
+app.run(host='0.0.0.0', port=5000)
